@@ -66,12 +66,17 @@ class KinovaStationHardwareInterface(LeafSystem):
     by gripper_target_type. 
    
     """
-    def __init__(self):
+    def __init__(self, n_dof=7):
         LeafSystem.__init__(self) 
         self.set_name("kinova_hardware_interface")
 
+<<<<<<< HEAD
         # Identify the Number of Joints
         self.num_joints = self.FindNumberOfRobotJoints()
+=======
+        # Save the number of degrees of freedom of the robot
+        self.n_dof = n_dof
+>>>>>>> e23f8c028c4eea3983f9219c64d0b8410ccfb4e2
 
         # Declare input ports
         self.ee_target_port = self.DeclareVectorInputPort(
@@ -91,6 +96,7 @@ class KinovaStationHardwareInterface(LeafSystem):
         # Declare output ports
         self.DeclareVectorOutputPort(
                 "measured_arm_position",
+<<<<<<< HEAD
                 BasicVector(self.num_joints),
                 self.CalcArmPosition)
         self.DeclareVectorOutputPort(
@@ -100,6 +106,17 @@ class KinovaStationHardwareInterface(LeafSystem):
         self.DeclareVectorOutputPort(
                 "measured_arm_torque",
                 BasicVector(self.num_joints),
+=======
+                BasicVector(self.n_dof),
+                self.CalcArmPosition)
+        self.DeclareVectorOutputPort(
+                "measured_arm_velocity",
+                BasicVector(self.n_dof),
+                self.CalcArmVelocity)
+        self.DeclareVectorOutputPort(
+                "measured_arm_torque",
+                BasicVector(self.n_dof),
+>>>>>>> e23f8c028c4eea3983f9219c64d0b8410ccfb4e2
                 self.CalcArmTorque)
 
         self.DeclareVectorOutputPort(
@@ -446,8 +463,13 @@ class KinovaStationHardwareInterface(LeafSystem):
         t = context.get_time()
         if (self.last_feedback_time != t): self.GetFeedback(t)
 
+<<<<<<< HEAD
         q = np.zeros(self.num_joints)
         for i in range(self.num_joints):
+=======
+        q = np.zeros(self.n_dof)
+        for i in range(self.n_dof):
+>>>>>>> e23f8c028c4eea3983f9219c64d0b8410ccfb4e2
             q[i] = np.radians(self.feedback.actuators[i].position)  # Kortex provides joint angles
                                                                     # in degrees for some reason
         output.SetFromVector(q)
@@ -459,8 +481,13 @@ class KinovaStationHardwareInterface(LeafSystem):
         t = context.get_time()
         if (self.last_feedback_time != t): self.GetFeedback(t)
 
+<<<<<<< HEAD
         qd = np.zeros(self.num_joints)
         for i in range(self.num_joints):
+=======
+        qd = np.zeros(self.n_dof)
+        for i in range(self.n_dof):
+>>>>>>> e23f8c028c4eea3983f9219c64d0b8410ccfb4e2
             qd[i] = np.radians(self.feedback.actuators[i].velocity)  # Kortex provides joint angles
                                                                      # in degrees for some reason
         output.SetFromVector(qd)
@@ -472,8 +499,13 @@ class KinovaStationHardwareInterface(LeafSystem):
         t = context.get_time()
         if (self.last_feedback_time != t): self.GetFeedback(t)
 
+<<<<<<< HEAD
         tau = np.zeros(self.num_joints)
         for i in range(self.num_joints):
+=======
+        tau = np.zeros(self.n_dof)
+        for i in range(self.n_dof):
+>>>>>>> e23f8c028c4eea3983f9219c64d0b8410ccfb4e2
             tau[i] = np.radians(self.feedback.actuators[i].torque)  # in Nm
 
         output.SetFromVector(tau)
