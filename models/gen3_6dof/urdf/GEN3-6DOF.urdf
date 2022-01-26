@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <robot name="GEN3-6DOF_VISION_URDF_ARM_V01" version="1.0">
   <link name="base_link">
     <inertial>
@@ -196,27 +197,6 @@
     <limit effort="9" velocity="0.8727" />
   </joint>
   <link name="end_effector_link" />
-    <!-- <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <mass value="0" />
-      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://kortex_description/arms/gen3/6dof/meshes/EndEffector_Link.STL" />
-      </geometry>
-      <material name="">
-        <color rgba="0.75294 0.75294 0.75294 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="package://kortex_description/arms/gen3/6dof/meshes/EndEffector_Link.STL" />
-      </geometry>
-    </collision>
-  </link> -->
   <joint name="EndEffector" type="fixed">
     <origin xyz="0 0 -0.061525" rpy="3.1416 0 -3.1416" />
     <parent link="bracelet_with_vision_link" />
