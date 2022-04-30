@@ -144,6 +144,9 @@ class KinovaStation(Diagram):
                 cartesian_controller.GetOutputPort("measured_ee_pose"),
                 "measured_ee_pose")
         self.builder.ExportOutput(
+                cartesian_controller.GetOutputPort("estimated_ee_velocity"),
+                "estimated_ee_velocity")
+        self.builder.ExportOutput(
                 cartesian_controller.GetOutputPort("measured_ee_twist"),
                 "measured_ee_twist")
         
@@ -711,7 +714,7 @@ class CartesianController(LeafSystem):
                          |                       | ----> measured_ee_pose
     arm_position ------> |                       | ----> measured_ee_twist
     arm_velocity ------> |                       |
-                         |                       |
+                         |                       | ----> estimated_ee_velocity
                          |                       |
                          -------------------------
 
@@ -755,6 +758,14 @@ class CartesianController(LeafSystem):
                 self.CalcEndEffectorPose,
                 {self.time_ticket()}   # indicate that this doesn't depend on any inputs,
                 )                      # but should still be updated each timestep
+
+        self.DeclareVectorOutputPort(
+                "estimated_ee_velocity",
+                BasicVector(6),
+                self.CalcEndEffectorVelocity,
+                {self.time_ticket()}   # indicate that this doesn't depend on any inputs,
+                )                      # but should still be updated each timestep
+
         self.DeclareVectorOutputPort(
                 "measured_ee_twist",
                 BasicVector(6),
@@ -772,6 +783,9 @@ class CartesianController(LeafSystem):
         # angles so we only run full IK when we need to
         self.last_ee_pose_target = None
         self.last_q_target = None
+
+        # Store previous end effector pose
+        self.last_ee_pose = np.zeros((6,))
     
     def GetJointLimits(self):
         """
@@ -824,6 +838,32 @@ class CartesianController(LeafSystem):
         ee_pose = np.hstack([RollPitchYaw(X_ee.rotation()).vector(), X_ee.translation()])
 
         output.SetFromVector(ee_pose)
+
+    def CalcEndEffectorVelocity(self, context, output):
+        """
+        This method is called each timestep to determine the end-effector velocity
+        """
+        q = self.arm_position_port.Eval(context)
+        qd = self.arm_velocity_port.Eval(context)
+        self.plant.SetPositions(self.context,q)
+        self.plant.SetVelocities(self.context,qd)
+
+        # Compute the rigid transform between the world and end-effector frames
+        X_ee = self.plant.CalcRelativeTransform(self.context,
+                                                self.world_frame,
+                                                self.ee_frame)
+
+        current_pose = np.hstack([RollPitchYaw(X_ee.rotation()).vector(), X_ee.translation()])
+
+        ee_estimated_velocity = (current_pose - self.last_ee_pose)/(self.plant.time_step())
+
+        print("estimated_velocity")
+        print(ee_estimated_velocity)
+
+        # Save Previous Pose
+        self.last_ee_pose = current_pose
+
+        output.SetFromVector(ee_estimated_velocity)
     
     def CalcEndEffectorTwist(self, context, output):
         """
