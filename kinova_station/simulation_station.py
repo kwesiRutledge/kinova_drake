@@ -857,8 +857,8 @@ class CartesianController(LeafSystem):
 
         ee_estimated_velocity = (current_pose - self.last_ee_pose)/(self.plant.time_step())
 
-        print("estimated_velocity")
-        print(ee_estimated_velocity)
+        # print("estimated_velocity")
+        # print(ee_estimated_velocity)
 
         # Save Previous Pose
         self.last_ee_pose = current_pose

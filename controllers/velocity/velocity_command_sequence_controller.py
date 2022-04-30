@@ -42,8 +42,8 @@ class VelocityCommandSequenceController(VelocityController):
         target_velocity = self.cs.target_velocity(t)
         target_twist = np.zeros(6)
 
-        print("target_velocity: ")
-        print(target_velocity)
+        # print("target_velocity: ")
+        # print(target_velocity)
 
         # Get current end-effector pose and twist
         current_velocity = self.ee_velocity_port.Eval(context)
@@ -53,8 +53,8 @@ class VelocityCommandSequenceController(VelocityController):
         twist_err = target_twist - current_twist
         velocity_err = target_velocity - current_velocity
 
-        print("velocity_err: ")
-        print(velocity_err)
+        # print("velocity_err: ")
+        # print(velocity_err)
 
         # Use rotation matrices to compute the difference between current and
         # desired end-effector orientations. This helps avoid gimbal lock as well 

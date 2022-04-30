@@ -70,8 +70,6 @@ class VelocityCommandSequence():
         assert len(self.commands) > 0 , "Empty command sequence. "
         assert t >= 0, "Only positive times allowed."
 
-        print(t)
-
         # Look through the spaces in start times to try to place t
         for i in range(len(self.commands)):
             if (self.start_times[i] <= t) and (t < self.start_times[i+1]):
