@@ -232,6 +232,8 @@ class KinovaStation(Diagram):
                     camera_transform_pub.GetOutputPort("camera_transform"),
                     "camera_transform")
 
+        AddDefaultVisualization(self.builder, meshcat=self.meshcat)
+
         # Build the diagram
         self.builder.BuildInto(self)
 
@@ -460,10 +462,12 @@ class KinovaStation(Diagram):
 
         # Defining self.meshcat in this way allows us to connect to 
         # things like a point-cloud visualizer later
-        self.meshcat = ConnectMeshcatVisualizer(builder=self.builder,
-                                 zmq_url = zmq_url,
-                                 scene_graph=self.scene_graph,
-                                 output_port=self.scene_graph.get_query_output_port())
+        # self.meshcat = ConnectMeshcatVisualizer(builder=self.builder,
+        #                          zmq_url = zmq_url,
+        #                          scene_graph=self.scene_graph,
+        #                          output_port=self.scene_graph.get_query_output_port())
+        self.meshcat = Meshcat()
+        #AddDefaultVisualization(self.builder, meshcat=self.meshcat)
 
     def go_home(self, diagram, diagram_context, name="Home"):
         """
@@ -921,7 +925,7 @@ class CartesianController(LeafSystem):
             # Use DoDifferentialInverseKinematics to determine desired qd
             params = DifferentialInverseKinematicsParameters(self.plant.num_positions(),
                                                              self.plant.num_velocities())
-            params.set_timestep(0.005)
+            params.set_time_step(0.005)
             params.set_joint_velocity_limits((self.qd_min, self.qd_max))
             params.set_joint_position_limits((self.q_min, self.q_max))
 
