@@ -1,0 +1,12 @@
+## 
+# requirements.txt
+##
+
+drake           # Robotics
+meshcat         # Meshcat
+opencv-python   # Video/Image
+open3d          # Point Cloud
+PyGObject       
+
+# kortex_api=2.3.0 # https://github.com/Kinovarobotics/kortex
+# protobuf=3.19.4
